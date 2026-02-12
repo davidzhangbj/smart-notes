@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Notes</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar: Note List -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-header-top">
+                    <h1>Smart Notes</h1>
+                    <button id="sidebarCollapse" class="sidebar-collapse-btn" title="Collapse sidebar">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <polyline points="11,4 6,9 11,14"/>
+                        </svg>
+                    </button>
+                </div>
+                <button id="newNoteBtn" class="btn-primary">+ New Note</button>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-container">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search notes..."
+                    class="search-input"
+                >
+                <button id="clearSearchBtn" class="clear-btn" style="display: none;">✕</button>
+            </div>
+
+            <!-- Tag Filter (shown when filtering) -->
+            <div id="tagFilter" class="tag-filter" style="display: none;">
+                <span>Filter: <strong id="activeTag"></strong></span>
+                <button id="clearTagFilter" class="text-btn">Clear</button>
+            </div>
+
+            <!-- Note List -->
+            <div id="noteList" class="note-list">
+                <!-- Notes will be rendered here -->
+            </div>
+
+            <!-- Tags Sidebar -->
+            <div class="tags-sidebar">
+                <h3>Tags</h3>
+                <div id="tagsList" class="tags-list">
+                    <!-- Tags will be rendered here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Toggle (visible when sidebar is collapsed) -->
+        <button id="sidebarToggle" class="sidebar-toggle" title="Expand sidebar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="5,3 11,8 5,13"/>
+            </svg>
+        </button>
+
+        <!-- Main Content: Editor/Preview -->
+        <main class="main-content">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state" style="display: none;">
+                <p>Loading...</p>
+            </div>
+
+            <!-- Empty State: blank when no note selected -->
+            <div id="emptyState" class="empty-state"></div>
+
+            <!-- Editor -->
+            <div id="editorContainer" class="editor-container" style="display: none;">
+                <div class="editor-header">
+                    <input
+                        type="text"
+                        id="noteTitle"
+                        placeholder="Note title..."
+                        class="note-title-input"
+                    >
+                    <button id="togglePreviewBtn" class="btn-toggle-preview active">Preview</button>
+                    <button id="deleteNoteBtn" class="btn-danger">Delete</button>
+                </div>
+
+                <!-- Tags Input -->
+                <div class="tags-input-container">
+                    <div id="noteTags" class="note-tags">
+                        <!-- Tags will be rendered here -->
+                    </div>
+                    <input
+                        type="text"
+                        id="tagInput"
+                        placeholder="Add tag..."
+                        class="tag-input"
+                    >
+                </div>
+
+                <!-- Editor and Preview -->
+                <div class="editor-preview">
+                    <!-- Markdown Editor -->
+                    <div class="editor-pane">
+                        <textarea
+                            id="noteContent"
+                            placeholder="Write your note in Markdown..."
+                            class="note-editor"
+                        ></textarea>
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="preview-pane">
+                        <div id="notePreview" class="note-preview">
+                            <!-- Rendered Markdown will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Bar -->
+                <div class="status-bar">
+                    <span id="saveStatus">All changes saved</span>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="deleteModal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Delete Note?</h2>
+                    <p>Are you sure you want to delete this note? This action cannot be undone.</p>
+                    <div class="modal-actions">
+                        <button id="cancelDeleteBtn" class="btn-secondary">Cancel</button>
+                        <button id="confirmDeleteBtn" class="btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
