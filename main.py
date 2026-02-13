@@ -8,6 +8,7 @@ Features: Note management (CRUD), Markdown support, hybrid search (keyword + sem
 Tech Stack: Python 3.11+, FastAPI, pyseekdb (embedded), vanilla HTML/CSS/JavaScript
 """
 
+import os
 import time
 import uuid
 from typing import List, Optional
@@ -23,7 +24,9 @@ import uvicorn
 # =============================================================================
 # Configuration
 # =============================================================================
-DB_PATH = "./seekdb.db"
+# Use DATA_DIR for persistent storage on Railway/Render/Fly.io (e.g. /data or ./data)
+_DATA_DIR = os.environ.get("DATA_DIR", ".")
+DB_PATH = os.path.join(_DATA_DIR, "seekdb.db")
 DATABASE_NAME = "smart_notes"
 COLLECTION_NAME = "notes"
 APP_VERSION = "1.0.0"
@@ -101,6 +104,7 @@ def init_database():
     """Initialize seekdb database and collection."""
     global admin_client, db_client, notes_collection
 
+    os.makedirs(_DATA_DIR, exist_ok=True)
     # Create admin client and database
     admin_client = AdminClient(path=DB_PATH)
     databases = admin_client.list_databases()
@@ -603,4 +607,7 @@ async def startup_event():
 # Main Entry Point
 # =============================================================================
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+    host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+    port = int(os.environ.get("PORT", "8000"))
+    reload = "RELOAD" in os.environ
+    uvicorn.run(app, host=host, port=port, reload=reload)

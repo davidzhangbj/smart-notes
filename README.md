@@ -69,6 +69,10 @@ Then open your browser to: `http://localhost:8000`
 
 All notes are stored locally in the `seekdb.db/` directory. To backup your notes, simply copy this directory.
 
+## Deployment
+
+To deploy with persistent storage (Railway, Render, Fly.io, or VPS), see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
+
 ## Development
 
 ```bash
