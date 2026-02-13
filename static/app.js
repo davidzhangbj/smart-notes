@@ -79,8 +79,25 @@ const API = {
 // =============================================================================
 // Utility Functions
 // =============================================================================
+let loadingTimer = null;
+
+/**
+ * Show/hide loading state.
+ * @param {boolean|'delayed'} show - true=show immediately, false=hide, 'delayed'=show after 200ms
+ */
 function showLoading(show) {
-    document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+    if (loadingTimer) {
+        clearTimeout(loadingTimer);
+        loadingTimer = null;
+    }
+    if (show === 'delayed') {
+        loadingTimer = setTimeout(() => {
+            document.getElementById('loadingState').style.display = 'flex';
+            loadingTimer = null;
+        }, 200);
+    } else {
+        document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+    }
 }
 
 function showStatus(message) {
@@ -158,7 +175,14 @@ function renderNoteList(notesToRender = notes) {
 // =============================================================================
 async function loadNote(noteId) {
     try {
-        showLoading(true);
+        // Update sidebar active state immediately for instant feedback
+        document.querySelectorAll('.note-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.id === noteId);
+        });
+
+        // Only show loading indicator if the request takes >200ms
+        // Keep current editor content visible in the meantime
+        showLoading('delayed');
         const response = await API.getNote(noteId);
 
         if (response.success) {
@@ -174,11 +198,6 @@ async function loadNote(noteId) {
             // Show editor, hide empty state
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('editorContainer').style.display = 'flex';
-
-            // Update active state in list
-            document.querySelectorAll('.note-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.id === noteId);
-            });
         }
     } catch (error) {
         console.error('Failed to load note:', error);
@@ -361,7 +380,7 @@ function performSearch(query) {
 
     searchDebounceTimer = setTimeout(async () => {
         try {
-            showLoading(true);
+            showLoading('delayed');
             const response = await API.search(query, currentFilterTag);
 
             if (response.success) {
@@ -434,7 +453,7 @@ async function filterByTag(tagName) {
     renderTagsList();
 
     try {
-        showLoading(true);
+        showLoading('delayed');
         const response = await API.listNotes(tagName);
 
         if (response.success) {

@@ -318,12 +318,15 @@ body {
     /* blank area when no note selected */
 }
 
-/* Loading State */
+/* Loading State — positioned as overlay to avoid layout shift */
 .loading-state {
-    flex: 1;
+    position: absolute;
+    inset: 0;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: var(--bg-primary, #ffffff);
 }
 
 /* Editor Container */
